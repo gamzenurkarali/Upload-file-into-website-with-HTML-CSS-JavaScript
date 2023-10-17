@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multiple File Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        label {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #selectedFiles {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .delete-button {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Multiple File Upload</h1>
+    <div class="file-upload">
+        <input type="file" id="fileInput" multiple>
+        <label for="fileInput">Choose Files</label>
+        <div id="selectedFiles"></div>
+    </div>
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const selectedFiles = document.getElementById("selectedFiles");
+        let uploadedFiles = [];
+
+        fileInput.addEventListener("change", function() {
+            const files = fileInput.files;
+            if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const fileName = file.name;
+                    const fileSize = (file.size / 1024).toFixed(2) + " KB";
+
+                    if (!uploadedFiles.find(uploadedFile => uploadedFile.name === fileName)) {
+                        uploadedFiles.push(file);
+                        const fileItem = document.createElement("div");
+                        fileItem.innerHTML = `<strong>${fileName}</strong> (${fileSize}) <button class="delete-button" data-index="${uploadedFiles.length - 1}">Delete</button>`;
+                        selectedFiles.appendChild(fileItem);
+                    }
+                }
+            } else {
+                selectedFiles.innerHTML = "No files selected";
+            }
+ 
+            fileInput.value = "";
+
+            const deleteButtons = document.querySelectorAll(".delete-button");
+            deleteButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const index = parseInt(button.getAttribute("data-index"));
+                    uploadedFiles.splice(index, 1);
+                    const fileItem = button.parentElement;
+                    fileItem.remove();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

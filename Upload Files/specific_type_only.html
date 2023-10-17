@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Specific File Type Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        label {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #selectedFile {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .delete-button {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Specific File Type Upload</h1>
+    <div class="file-upload">
+        <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .pdf">
+        <label for="fileInput">Choose File</label>
+        <div id="selectedFile"></div>
+    </div>
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const selectedFile = document.getElementById("selectedFile");
+
+        fileInput.addEventListener("change", function() {
+            const files = fileInput.files;
+            if (files.length > 0) {
+                const file = files[0];
+                const fileName = file.name;
+                const fileSize = (file.size / 1024).toFixed(2) + " KB";
+
+                if (selectedFile.children.length > 0) {
+                    alert("You can only upload one file at a time. Please delete the existing file first.");
+                    fileInput.value = null;  
+                } else {
+                    const fileItem = document.createElement("div");
+                    fileItem.innerHTML = `<strong>${fileName}</strong> (${fileSize}) <button class="delete-button">Delete</button>`;
+                    selectedFile.appendChild(fileItem);
+
+                    const deleteButton = fileItem.querySelector(".delete-button");
+                    deleteButton.addEventListener("click", function() {
+                        selectedFile.innerHTML = "";  
+                        fileInput.value = null;  
+                    });
+                }
+            } else {
+                selectedFile.innerHTML = "No file selected";
+            }
+        });
+    </script>
+</body>
+</html>
